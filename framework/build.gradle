@@ -1,0 +1,48 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    compileSdk rootProject.android.compileSdkVersion
+
+    defaultConfig {
+        minSdk rootProject.android.minSdkVersion
+        targetSdk rootProject.android.targetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility rootProject.source_compatibility
+        targetCompatibility rootProject.target_compatibility
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    api rootProject.dep['android-core-ktx']
+    api rootProject.dep['appcompat']
+    api rootProject.dep['material']
+    api rootProject.dep['lifecycle-viewmodel-ktx']
+    api rootProject.dep['lifecycle-livedata-ktx']
+    api rootProject.dep['lifecycle-runtime-ktx']
+    api rootProject.dep['android-fragment-ktx']
+    api rootProject.dep['kotlinx-coroutines-android']
+    api rootProject.dep['retrofit2']
+    api rootProject.dep['retrofit2-converter-gson']
+    api rootProject.dep['okhttp3-logging-interceptor']
+
+    testImplementation rootProject.dep['junit']
+    androidTestImplementation rootProject.dep['androidx-junit']
+    androidTestImplementation rootProject.dep['androidx-espresso-core']
+}

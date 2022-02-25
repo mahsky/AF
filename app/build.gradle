@@ -1,0 +1,45 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    compileSdk rootProject.android.compileSdkVersion
+    defaultConfig {
+        applicationId rootProject.android.applicationId
+        minSdk rootProject.android.minSdkVersion
+        targetSdk rootProject.android.targetSdkVersion
+        versionCode rootProject.android.versionCode
+        versionName rootProject.android.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility rootProject.source_compatibility
+        targetCompatibility rootProject.target_compatibility
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    viewBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+    implementation project(':framework')
+    implementation rootProject.dep['android-core-ktx']
+    implementation rootProject.dep['appcompat']
+    implementation rootProject.dep['material']
+
+    testImplementation rootProject.dep['junit']
+    androidTestImplementation rootProject.dep['androidx-junit']
+    androidTestImplementation rootProject.dep['androidx-espresso-core']
+}
