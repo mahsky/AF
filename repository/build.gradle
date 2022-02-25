@@ -21,8 +21,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility rootProject.source_compatibility
-        targetCompatibility rootProject.target_compatibility
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -30,19 +30,8 @@ android {
 }
 
 dependencies {
-    api rootProject.dep['android-core-ktx']
-    api rootProject.dep['appcompat']
-    api rootProject.dep['material']
-    api rootProject.dep['lifecycle-viewmodel-ktx']
-    api rootProject.dep['lifecycle-livedata-ktx']
-    api rootProject.dep['lifecycle-runtime-ktx']
-    api rootProject.dep['android-fragment-ktx']
-    api rootProject.dep['kotlinx-coroutines-android']
-    api rootProject.dep['retrofit2']
-    api rootProject.dep['retrofit2-converter-gson']
-    api rootProject.dep['okhttp3-logging-interceptor']
-    api rootProject.dep['moshi']
-    api rootProject.dep['converter-moshi']
+    implementation project(':framework')
+    api project(':model')
 
     testImplementation rootProject.dep['junit']
     androidTestImplementation rootProject.dep['androidx-junit']

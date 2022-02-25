@@ -52,22 +52,4 @@ class MainActivity : AppCompatActivity() {
     fun appendText(text: String) {
         viewBinding.textView.text = "${viewBinding.textView.text} + $text"
     }
-
-
-}
-
-sealed class ApiResponse<T> {
-    // 正常响应情况调用方不需要 errcode, msg
-    data class Ok<T>(
-        val data: T
-    )
-
-    data class BizError<T>(
-        val errcode: Int,
-        val msg: String
-    ): ApiResponse<T>()
-
-    data class OtherError<T>(
-        val throwable: Throwable
-    ): ApiResponse<T>()
 }

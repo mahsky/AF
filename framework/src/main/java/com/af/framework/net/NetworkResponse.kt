@@ -25,10 +25,17 @@ sealed class NetworkResponse<out T : Any, out U : Any> {
 }
 
 
-fun <T : Any, U : Any> NetworkResponse<T, U>.onFailure(): NetworkResponse<T, U> {
+fun <T : Any, U : Any> NetworkResponse<T, U>.onFailure(failure: (u: NetworkResponse<T, U>) -> Unit): NetworkResponse<T, U> {
+    when (this) {
+        is NetworkResponse.Success -> {}
+        else -> failure(this)
+    }
     return this
 }
 
-fun <T : Any, U : Any> NetworkResponse<T, U>.onSuccess(): NetworkResponse<T, U> {
+fun <T : Any, U : Any> NetworkResponse<T, U>.onSuccess(success: (t: T) -> Unit): NetworkResponse<T, U> {
+    if (this is NetworkResponse.Success) {
+        success(body)
+    }
     return this
 }

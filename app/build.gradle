@@ -35,6 +35,7 @@ android {
 
 dependencies {
     implementation project(':framework')
+    implementation project(':repository')
     implementation rootProject.dep['android-core-ktx']
     implementation rootProject.dep['appcompat']
     implementation rootProject.dep['material']

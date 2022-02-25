@@ -6,6 +6,8 @@ ext {
     coroutines_version = '1.6.0'
     retrofit_version = '2.9.0'
     okhttp_logging_version = '4.7.2'
+    moshi_version = '1.13.0'
+    converter_moshi_version = '2.4.0'
 
     android = [
             compileSdkVersion: 31,
@@ -32,6 +34,9 @@ ext {
             'retrofit2'                  : "com.squareup.retrofit2:converter-gson:${retrofit_version}",
             'retrofit2-converter-gson'   : "com.squareup.retrofit2:retrofit:${retrofit_version}",
             'okhttp3-logging-interceptor': "com.squareup.okhttp3:logging-interceptor:${okhttp_logging_version}",
+            'moshi'                      : "com.squareup.moshi:moshi:${moshi_version}",
+            'moshi-kotlin-codegen'       : "com.squareup.moshi:moshi-kotlin-codegen:${moshi_version}",
+            'converter-moshi'            : "com.squareup.retrofit2:converter-moshi:${converter_moshi_version}",
 
             //for test
             'junit'                      : 'junit:junit:4.13.2',

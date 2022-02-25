@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 rootProject.name = "AF"
 include ':app'
 include ':framework'
+include ':model'
+include ':repository'
