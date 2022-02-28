@@ -23,19 +23,3 @@ sealed class NetworkResponse<out T : Any, out U : Any> {
      */
     data class UnknownError(val error: Throwable?) : NetworkResponse<Nothing, Nothing>()
 }
-
-
-fun <T : Any, U : Any> NetworkResponse<T, U>.onFailure(failure: (u: NetworkResponse<T, U>) -> Unit): NetworkResponse<T, U> {
-    when (this) {
-        is NetworkResponse.Success -> {}
-        else -> failure(this)
-    }
-    return this
-}
-
-fun <T : Any, U : Any> NetworkResponse<T, U>.onSuccess(success: (t: T) -> Unit): NetworkResponse<T, U> {
-    if (this is NetworkResponse.Success) {
-        success(body)
-    }
-    return this
-}

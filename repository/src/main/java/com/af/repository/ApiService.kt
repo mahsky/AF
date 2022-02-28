@@ -1,8 +1,7 @@
 package com.af.repository
 
-import com.af.framework.net.NetworkResponse
-import com.af.model.Success
-import com.af.model.Error
+import com.af.model.User
+import com.af.repository.common.Response
 import retrofit2.http.GET
 
 /**
@@ -10,8 +9,8 @@ import retrofit2.http.GET
  */
 interface ApiService {
     @GET("success")
-    suspend fun getSuccess(): NetworkResponse<Success, Error>
+    suspend fun getSuccess(): Response<User>
 
     @GET("error")
-    suspend fun getError(): NetworkResponse<Success, Error>
+    suspend fun getError(): Response<User>
 }
