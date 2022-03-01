@@ -9,15 +9,20 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  * Created by mah on 2022/2/25.
  */
 object Network {
+
+    private val retrofitMap = mutableMapOf<String, Retrofit>()
+
     private val moshi by lazy {
         Moshi.Builder().build()
     }
+
     private val okHttpClient by lazy {
         OkHttpClient.Builder().build()
     }
-    val retrofit: Retrofit by lazy {
+
+    fun getRetrofit(baseUrl: String): Retrofit = retrofitMap.getOrPut(baseUrl) {
         Retrofit.Builder()
-            .baseUrl("http://retroftcoroutines.free.beeceptor.com/")
+            .baseUrl(baseUrl)
             .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(okHttpClient)
