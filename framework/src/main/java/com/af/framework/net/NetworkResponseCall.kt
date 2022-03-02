@@ -11,7 +11,8 @@ import java.io.IOException
 
 internal class NetworkResponseCall<S : Any, E : Any>(
     private val delegate: Call<S>,
-    private val errorConverter: Converter<ResponseBody, E>
+    private val errorConverter: Converter<ResponseBody, E>,
+    private val responseListener: ((response: NetworkResponse<Any, Any>) -> Unit)? = null
 ) : Call<NetworkResponse<S, E>> {
 
     override fun enqueue(callback: Callback<NetworkResponse<S, E>>) {
@@ -25,13 +26,17 @@ internal class NetworkResponseCall<S : Any, E : Any>(
                     if (body != null) {
                         callback.onResponse(
                             this@NetworkResponseCall,
-                            Response.success(NetworkResponse.Success(body))
+                            Response.success(NetworkResponse.Success(body).apply {
+                                responseListener?.invoke(this)
+                            })
                         )
                     } else {
                         // Response is successful but the body is null
                         callback.onResponse(
                             this@NetworkResponseCall,
-                            Response.success(NetworkResponse.UnknownError(null))
+                            Response.success(NetworkResponse.UnknownError(null).apply {
+                                responseListener?.invoke(this)
+                            })
                         )
                     }
                 } else {
@@ -47,12 +52,16 @@ internal class NetworkResponseCall<S : Any, E : Any>(
                     if (errorBody != null) {
                         callback.onResponse(
                             this@NetworkResponseCall,
-                            Response.success(NetworkResponse.ApiError(errorBody, code))
+                            Response.success(NetworkResponse.ApiError(errorBody, code).apply {
+                                responseListener?.invoke(this)
+                            })
                         )
                     } else {
                         callback.onResponse(
                             this@NetworkResponseCall,
-                            Response.success(NetworkResponse.UnknownError(null))
+                            Response.success(NetworkResponse.UnknownError(null).apply {
+                                responseListener?.invoke(this)
+                            })
                         )
                     }
                 }
@@ -62,6 +71,8 @@ internal class NetworkResponseCall<S : Any, E : Any>(
                 val networkResponse = when (throwable) {
                     is IOException -> NetworkResponse.NetworkError(throwable)
                     else -> NetworkResponse.UnknownError(throwable)
+                }.apply {
+                    responseListener?.invoke(this)
                 }
                 callback.onResponse(this@NetworkResponseCall, Response.success(networkResponse))
             }
@@ -70,7 +81,7 @@ internal class NetworkResponseCall<S : Any, E : Any>(
 
     override fun isExecuted() = delegate.isExecuted
 
-    override fun clone() = NetworkResponseCall(delegate.clone(), errorConverter)
+    override fun clone() = NetworkResponseCall(delegate.clone(), errorConverter, responseListener)
 
     override fun isCanceled() = delegate.isCanceled
 

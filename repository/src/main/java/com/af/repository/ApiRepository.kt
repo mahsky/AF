@@ -1,11 +1,11 @@
 package com.af.repository
 
-import com.af.framework.net.BaseRepository
+import com.af.framework.net.Repository
 
 /**
  * Created by mah on 2022/2/25.
  */
-class ApiRepository : BaseRepository<ApiService>(
+class ApiRepository : Repository<ApiService>(
     ApiService::class.java,
     "http://retroftcoroutines.free.beeceptor.com/"
 ) {

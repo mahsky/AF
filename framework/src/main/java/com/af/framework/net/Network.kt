@@ -12,7 +12,16 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  */
 object Network {
 
+    /**
+     * retrofit 多实例
+     */
     private val retrofitMap = mutableMapOf<String, Retrofit>()
+
+    /**
+     * 统一监听response , 用于统一的错误处理
+     * 非主线程回调
+     */
+    val responseListener = arrayListOf<((response: NetworkResponse<Any, Any>) -> Unit)>()
 
     private val moshi by lazy {
         Moshi.Builder().build()
@@ -30,10 +39,18 @@ object Network {
             .build()
     }
 
+    private val networkResponseAdapterFactory by lazy {
+        NetworkResponseAdapterFactory() { response ->
+            responseListener.forEach {
+                it.invoke(response)
+            }
+        }
+    }
+
     fun getRetrofit(baseUrl: String): Retrofit = retrofitMap.getOrPut(baseUrl) {
         Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addCallAdapterFactory(NetworkResponseAdapterFactory())
+            .addCallAdapterFactory(networkResponseAdapterFactory)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(okHttpClient)
             .build()

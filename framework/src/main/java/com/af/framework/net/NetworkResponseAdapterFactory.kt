@@ -6,7 +6,9 @@ import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-class NetworkResponseAdapterFactory : CallAdapter.Factory() {
+class NetworkResponseAdapterFactory(
+    private val responseListener: ((response: NetworkResponse<Any, Any>) -> Unit)? = null
+) : CallAdapter.Factory() {
 
     override fun get(
         returnType: Type,
@@ -40,6 +42,6 @@ class NetworkResponseAdapterFactory : CallAdapter.Factory() {
         val errorBodyConverter =
             retrofit.nextResponseBodyConverter<Any>(null, errorBodyType, annotations)
 
-        return NetworkResponseAdapter<Any, Any>(successBodyType, errorBodyConverter)
+        return NetworkResponseAdapter<Any, Any>(successBodyType, errorBodyConverter, responseListener)
     }
 }
