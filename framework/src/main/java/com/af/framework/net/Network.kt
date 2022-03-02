@@ -3,6 +3,7 @@ package com.af.framework.net
 import com.af.framework.BuildConfig
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -23,6 +24,11 @@ object Network {
      */
     val responseListener = arrayListOf<((response: NetworkResponse<Any, Any>) -> Unit)>()
 
+    /**
+     * 公共参数配置
+     */
+    var networkParameterAdapter: NetworkParameterAdapter? = null
+
     private val moshi by lazy {
         Moshi.Builder().build()
     }
@@ -36,6 +42,7 @@ object Network {
                     })
                 }
             }
+            .addInterceptor(NetworkParameterInterceptor(NetworkParameterAdapterFactory().get(networkParameterAdapter)))
             .build()
     }
 
