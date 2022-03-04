@@ -12,7 +12,7 @@ fun <T : Any> Response<T>.thenFailure(failure: (u: Error) -> Unit): Response<T> 
     when (this) {
         is NetworkResponse.Success -> {}
         is NetworkResponse.ApiError -> {
-            failure(Error(body.toString(), code.toString(), id))
+            failure(Error(data.toString(), code.toString(), id))
         }
         is NetworkResponse.NetworkError -> {
             failure(Error(NETWORK_NET_ERROR, "network error", id))
@@ -26,7 +26,7 @@ fun <T : Any> Response<T>.thenFailure(failure: (u: Error) -> Unit): Response<T> 
 
 fun <T : Any> Response<T>.thenSuccess(success: (t: T) -> Unit): Response<T> {
     if (this is NetworkResponse.Success) {
-        success(body)
+        success(data)
     }
     return this
 }

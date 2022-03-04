@@ -37,7 +37,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 }.thenSuccess { user ->
                     _uiState.update { it.copy(name = user.name) }
                 }.thenSuccessResponse { response ->
-                    _uiState.update { it.copy(name = "${response.body.name}  ${response.id}") }
+                    _uiState.update { it.copy(name = "${response.data.name}  ${response.id}") }
                 }
         }
     }
