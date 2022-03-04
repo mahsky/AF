@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.af.repository.ApiRepository
 import com.af.repository.common.thenFailure
 import com.af.repository.common.thenSuccess
+import com.af.repository.common.thenSuccessResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -32,9 +33,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             ApiRepository()
                 .getSuccess()
                 .thenFailure { error ->
-                    _uiState.update { it.copy(name = error.status) }
+                    _uiState.update { it.copy(name = "${error.status} ${error.id}") }
                 }.thenSuccess { user ->
                     _uiState.update { it.copy(name = user.name) }
+                }.thenSuccessResponse { response ->
+                    _uiState.update { it.copy(name = "${response.body.name}  ${response.id}") }
                 }
         }
     }

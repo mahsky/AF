@@ -12,13 +12,13 @@ fun <T : Any> Response<T>.thenFailure(failure: (u: Error) -> Unit): Response<T> 
     when (this) {
         is NetworkResponse.Success -> {}
         is NetworkResponse.ApiError -> {
-            failure(Error(body.toString(), code.toString()))
+            failure(Error(body.toString(), code.toString(), id))
         }
         is NetworkResponse.NetworkError -> {
-            failure(Error(NETWORK_NET_ERROR, "network error"))
+            failure(Error(NETWORK_NET_ERROR, "network error", id))
         }
         is NetworkResponse.UnknownError -> {
-            failure(Error(NETWORK_UNKNOWN_ERROR, "unknown error"))
+            failure(Error(NETWORK_UNKNOWN_ERROR, "unknown error", id))
         }
     }
     return this
@@ -27,6 +27,13 @@ fun <T : Any> Response<T>.thenFailure(failure: (u: Error) -> Unit): Response<T> 
 fun <T : Any> Response<T>.thenSuccess(success: (t: T) -> Unit): Response<T> {
     if (this is NetworkResponse.Success) {
         success(body)
+    }
+    return this
+}
+
+fun <T : Any> Response<T>.thenSuccessResponse(success: (t: NetworkResponse.Success<T>) -> Unit): Response<T> {
+    if (this is NetworkResponse.Success) {
+        success(this)
     }
     return this
 }

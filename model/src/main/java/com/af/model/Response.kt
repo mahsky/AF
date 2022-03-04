@@ -21,5 +21,7 @@ data class Error(
     val status: String,
 
     @Json(name = "message")
-    val message: String
+    val message: String,
+
+    val id: String = ""
 )

@@ -1,5 +1,6 @@
 package com.af.repository
 
+import com.af.framework.net.ID
 import com.af.model.User
 import com.af.repository.common.Response
 import retrofit2.http.GET
@@ -9,6 +10,7 @@ import retrofit2.http.GET
  */
 interface ApiService {
     @GET("success")
+    @ID("1001")
     suspend fun getSuccess(): Response<User>
 
     @GET("error")

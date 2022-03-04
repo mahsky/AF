@@ -42,6 +42,8 @@ class NetworkResponseAdapterFactory(
         val errorBodyConverter =
             retrofit.nextResponseBodyConverter<Any>(null, errorBodyType, annotations)
 
-        return NetworkResponseAdapter<Any, Any>(successBodyType, errorBodyConverter, responseListener)
+        val id = (annotations.find { it is ID } as? ID)?.value ?: ""
+
+        return NetworkResponseAdapter<Any, Any>(successBodyType, errorBodyConverter, responseListener, id)
     }
 }
