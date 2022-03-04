@@ -26,6 +26,8 @@ android {
 
 dependencies {
     implementation rootProject.dep['moshi']
+    implementation project(':framework')
+
     kapt rootProject.dep['moshi-kotlin-codegen']
 
     testImplementation rootProject.dep['junit']

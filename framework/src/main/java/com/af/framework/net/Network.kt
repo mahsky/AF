@@ -30,7 +30,9 @@ object Network {
     var networkParameterAdapter: NetworkParameterAdapter? = null
 
     private val moshi by lazy {
-        Moshi.Builder().build()
+        Moshi.Builder()
+            .add(NetworkMoshiAdapterFactory())
+            .build()
     }
 
     private val okHttpClient by lazy {
