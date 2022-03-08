@@ -4,10 +4,10 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 /**
- * Created by mah on 2022/3/4.
+ * Created by mah on 2022/3/7.
  */
 @JsonClass(generateAdapter = true)
-data class WanAndroid(
-    @Json(name = "curPage")
-    val curPage: Int
+data class WanAndroidBanner(
+    @Json(name = "title")
+    val title: String
 )

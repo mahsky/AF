@@ -10,4 +10,6 @@ class WanAndroidRepository : NetworkRepository<WanAndroidService>(
     "https://wanandroid.com/"
 ) {
     suspend fun wenda() = service.wenda()
+
+    suspend fun banner() = service.banner()
 }

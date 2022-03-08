@@ -17,8 +17,8 @@ class App : Application() {
             val error = when (it) {
                 is NetworkResponse.Success -> "Success"
                 is NetworkResponse.ApiError -> "ApiError"
-                is NetworkResponse.NetworkError -> "NetworkError"
-                is NetworkResponse.UnknownError -> "UnknownError"
+                is NetworkResponse.NetworkError -> "NetworkError  ${it.error.message}"
+                is NetworkResponse.UnknownError -> "UnknownError  ${it.error?.message}"
             }
             println("response listener $error")
         }
