@@ -2,7 +2,6 @@ package com.af.framework.net
 
 import com.af.framework.net.Utils.getParameterUpperBound
 import com.squareup.moshi.*
-import retrofit2.CallAdapter
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
@@ -12,20 +11,29 @@ import java.lang.reflect.Type
  */
 class NetworkMoshiAdapterFactory : JsonAdapter.Factory {
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? {
-        val rawType = type.rawType
-        println("--------- $rawType ${Utils.getRawType(type)}")
-        if (Utils.getRawType(type) != CropNetworkResponse::class.java) return null
-
+        val rawClass = Utils.getRawType(type)
+        if (rawClass != NetworkResponse::class.java) return null
         val responseType = getParameterUpperBound(0, type as ParameterizedType)
-
         val dataTypeAdapter = moshi.nextAdapter<Any>(
             this, responseType, annotations
         )
-        return NetworkResponseTypeAdapter(responseType, dataTypeAdapter)
+        val rawResponseType = Utils.getRawType(responseType)
+        var checkAnnotationType = responseType
+
+        if (rawResponseType == List::class.java || rawResponseType == Collection::class.java) {
+            checkAnnotationType = getParameterUpperBound(0, responseType as ParameterizedType)
+        }
+        val isNeedCrop = Utils.getRawType(checkAnnotationType).annotations.firstOrNull { it is CropEnvelope } != null
+
+        return if (isNeedCrop) {
+            NetworkCropResponseTypeAdapter(responseType, dataTypeAdapter)
+        } else {
+            NetworkResponseTypeAdapter(responseType, dataTypeAdapter)
+        }
     }
 }
 
-class NetworkResponseTypeAdapter<T>(
+class NetworkCropResponseTypeAdapter<T>(
     private val outerType: Type,
     private val dataTypeAdapter: JsonAdapter<T>
 ) : JsonAdapter<T>() {
@@ -40,6 +48,19 @@ class NetworkResponseTypeAdapter<T>(
         }
         reader.endObject()
         return NetworkResponse.Success(data!!) as T?
+    }
+
+    override fun toJson(writer: JsonWriter, value: T?) {
+    }
+
+}
+
+class NetworkResponseTypeAdapter<T>(
+    private val outerType: Type,
+    private val dataTypeAdapter: JsonAdapter<T>
+) : JsonAdapter<T>() {
+    override fun fromJson(reader: JsonReader): T? {
+        return NetworkResponse.Success(dataTypeAdapter.fromJson(reader)!!) as T?
     }
 
     override fun toJson(writer: JsonWriter, value: T?) {

@@ -29,28 +29,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun load() {
         viewModelScope.launch {
-//            WanAndroidRepository()
-//                .wenda()
-//                .thenFailure { error ->
-//                    _uiState.update { it.copy(name = "${error.status} ${error.id}") }
-//                }.thenSuccess { user ->
-//                    _uiState.update { it.copy(name = "curPage + ${user.curPage.toString()}") }
-//                }
-//
-//            WanAndroidRepository()
-//                .banner()
-//                .thenFailure { error ->
-//                    _uiState.update { it.copy(name = "${error.status} ${error.id}") }
-//                }.thenSuccess { banners ->
-//                    _uiState.update { it.copy(name = banners.firstOrNull()?.title ?: "json parse error") }
-//                }
-
             WanAndroidRepository()
-                .bannerTest()
+                .banner()
                 .thenFailure { error ->
                     _uiState.update { it.copy(name = "${error.status} ${error.id}") }
                 }.thenSuccess { banners ->
-                    _uiState.update { it.copy(name = banners.firstOrNull()?.title ?: "json parse error") }
+                    _uiState.update { it.copy(name = banners.data.firstOrNull()?.title ?: "empty") }
+                }
+
+            WanAndroidRepository()
+                .cropBanner()
+                .thenFailure { error ->
+                    _uiState.update { it.copy(name = "${error.status} ${error.id}") }
+                }.thenSuccess { banners ->
+                    _uiState.update { it.copy(name = banners.firstOrNull()?.title ?: "empty") }
                 }
         }
     }

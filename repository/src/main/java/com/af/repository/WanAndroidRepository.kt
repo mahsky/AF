@@ -9,9 +9,7 @@ class WanAndroidRepository : NetworkRepository<WanAndroidService>(
     WanAndroidService::class.java,
     baseUrl = "https://wanandroid.com/"
 ) {
-    suspend fun wenda() = service.wenda()
-
     suspend fun banner() = service.banner()
 
-    suspend fun bannerTest() = service.bannerTest()
+    suspend fun cropBanner() = service.cropBanner()
 }

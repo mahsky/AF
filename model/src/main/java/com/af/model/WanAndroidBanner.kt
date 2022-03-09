@@ -8,6 +8,19 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 data class WanAndroidBanner(
-    @Json(name = "title")
-    val title: String
-)
+    @Json(name = "data")
+    val data: List<Data>,
+) {
+    @JsonClass(generateAdapter = true)
+    data class Data(
+        val desc: String,
+        val id: Int,
+        val imagePath: String,
+        val isVisible: Int,
+        val order: Int,
+        val title: String,
+        val type: Int,
+        val url: String
+    )
+}
+

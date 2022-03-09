@@ -11,11 +11,11 @@ class NetworkResponseAdapter<S : Any, E : Any>(
     private val errorBodyConverter: Converter<ResponseBody, E>,
     private val responseListener: ((response: NetworkResponse<Any, Any>) -> Unit)? = null,
     private val id: String = ""
-) : CallAdapter<S, Call<NetworkResponse<S, E>>> {
+) : CallAdapter<NetworkResponse<S, E>, Call<NetworkResponse<S, E>>> {
 
     override fun responseType(): Type = successType
 
-    override fun adapt(call: Call<S>): Call<NetworkResponse<S, E>> {
+    override fun adapt(call: Call<NetworkResponse<S, E>>): Call<NetworkResponse<S, E>> {
         return NetworkResponseCall(call, errorBodyConverter, responseListener, id)
     }
 }

@@ -49,7 +49,7 @@ object Network {
     }
 
     private val networkResponseAdapterFactory by lazy {
-        NetworkResponseAdapterFactory() { response ->
+        NetworkResponseAdapterFactory { response ->
             responseListener.forEach {
                 it.invoke(response)
             }

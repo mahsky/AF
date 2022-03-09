@@ -10,24 +10,27 @@ import retrofit2.Response
 import java.io.IOException
 
 internal class NetworkResponseCall<S : Any, E : Any>(
-    private val delegate: Call<S>,
+    private val delegate: Call<NetworkResponse<S, E>>,
     private val errorConverter: Converter<ResponseBody, E>,
     private val responseListener: ((response: NetworkResponse<Any, Any>) -> Unit)? = null,
     private val id: String = ""
 ) : Call<NetworkResponse<S, E>> {
 
     override fun enqueue(callback: Callback<NetworkResponse<S, E>>) {
-        return delegate.enqueue(object : Callback<S> {
-            override fun onResponse(call: Call<S>, response: Response<S>) {
+        return delegate.enqueue(object : Callback<NetworkResponse<S, E>> {
+            override fun onResponse(
+                call: Call<NetworkResponse<S, E>>,
+                response: Response<NetworkResponse<S, E>>
+            ) {
                 val body = response.body()
                 val code = response.code()
                 val error = response.errorBody()
 
                 if (response.isSuccessful) {
-                    if (body != null && body is NetworkResponse.Success<*>) {
+                    if (body != null && body is NetworkResponse.Success) {
                         callback.onResponse(
                             this@NetworkResponseCall,
-                            Response.success(NetworkResponse.Success(body.data as S, id).apply {
+                            Response.success(body.copy(id = id).apply {
                                 responseListener?.invoke(this)
                             })
                         )
@@ -68,7 +71,7 @@ internal class NetworkResponseCall<S : Any, E : Any>(
                 }
             }
 
-            override fun onFailure(call: Call<S>, throwable: Throwable) {
+            override fun onFailure(call: Call<NetworkResponse<S, E>>, throwable: Throwable) {
                 val networkResponse = when (throwable) {
                     is IOException -> NetworkResponse.NetworkError(throwable, id)
                     else -> NetworkResponse.UnknownError(throwable, id)
