@@ -11,20 +11,17 @@ import java.lang.reflect.Type
  */
 class NetworkMoshiAdapterFactory : JsonAdapter.Factory {
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? {
-        val rawClass = Utils.getRawType(type)
-        if (rawClass != NetworkResponse::class.java) return null
+        if (Utils.getRawType(type) != NetworkResponse::class.java) return null
         val responseType = getParameterUpperBound(0, type as ParameterizedType)
-        val dataTypeAdapter = moshi.nextAdapter<Any>(
-            this, responseType, annotations
-        )
         val rawResponseType = Utils.getRawType(responseType)
         var checkAnnotationType = responseType
-
         if (rawResponseType == List::class.java || rawResponseType == Collection::class.java) {
             checkAnnotationType = getParameterUpperBound(0, responseType as ParameterizedType)
         }
         val isNeedCrop = Utils.getRawType(checkAnnotationType).annotations.firstOrNull { it is CropEnvelope } != null
-
+        val dataTypeAdapter = moshi.nextAdapter<Any>(
+            this, responseType, annotations
+        )
         return if (isNeedCrop) {
             NetworkCropResponseTypeAdapter(responseType, dataTypeAdapter)
         } else {
@@ -40,19 +37,38 @@ class NetworkCropResponseTypeAdapter<T>(
     override fun fromJson(reader: JsonReader): T? {
         reader.beginObject()
         var data: Any? = null
+        var errorCode: Int = 0
+        var errorMsg: String = ""
+        var dataException: Exception? = null
         while (reader.hasNext()) {
             when (reader.nextName()) {
-                "data" -> data = dataTypeAdapter.fromJson(reader)
+                "data" -> {
+                    try {
+                        data = dataTypeAdapter.fromJson(reader)
+                    } catch (e: Exception) {
+                        dataException = e
+                    }
+                }
+                "errorCode" -> errorCode = reader.nextInt()
+                "errorMsg" -> errorMsg = reader.nextString()
                 else -> reader.skipValue()
             }
         }
         reader.endObject()
-        return NetworkResponse.Success(data!!) as T?
+
+        if (errorCode != 0) {
+            return NetworkResponse.BizError(errorCode, errorMsg) as? T
+        }
+
+        if (errorCode == 0 && dataException != null) {
+            throw dataException
+        }
+
+        return if (data == null) null else NetworkResponse.Success(data) as? T
     }
 
     override fun toJson(writer: JsonWriter, value: T?) {
     }
-
 }
 
 class NetworkResponseTypeAdapter<T>(
@@ -60,10 +76,10 @@ class NetworkResponseTypeAdapter<T>(
     private val dataTypeAdapter: JsonAdapter<T>
 ) : JsonAdapter<T>() {
     override fun fromJson(reader: JsonReader): T? {
-        return NetworkResponse.Success(dataTypeAdapter.fromJson(reader)!!) as T?
+        val data: Any? = dataTypeAdapter.fromJson(reader)
+        return if (data == null) null else NetworkResponse.Success(data) as? T
     }
 
     override fun toJson(writer: JsonWriter, value: T?) {
     }
-
 }

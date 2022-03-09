@@ -27,21 +27,16 @@ internal class NetworkResponseCall<S : Any, E : Any>(
                 val error = response.errorBody()
 
                 if (response.isSuccessful) {
-                    if (body != null && body is NetworkResponse.Success) {
-                        callback.onResponse(
-                            this@NetworkResponseCall,
-                            Response.success(body.copy(id = id).apply {
-                                responseListener?.invoke(this)
-                            })
-                        )
+                    if (body != null) {
+                        when (body) {
+                            is NetworkResponse.Success -> body.copy(id = id)
+                            is NetworkResponse.BizError -> body.copy(id = id)
+                            else -> {
+                                NetworkResponse.UnknownError(null, id)
+                            }
+                        }
                     } else {
-                        // Response is successful but the body is null
-                        callback.onResponse(
-                            this@NetworkResponseCall,
-                            Response.success(NetworkResponse.UnknownError(null, id).apply {
-                                responseListener?.invoke(this)
-                            })
-                        )
+                        NetworkResponse.UnknownError(null, id)
                     }
                 } else {
                     val errorBody = when {
@@ -50,24 +45,22 @@ internal class NetworkResponseCall<S : Any, E : Any>(
                         else -> try {
                             errorConverter.convert(error)
                         } catch (ex: Exception) {
+                            ex.printStackTrace()
                             null
                         }
                     }
                     if (errorBody != null) {
-                        callback.onResponse(
-                            this@NetworkResponseCall,
-                            Response.success(NetworkResponse.ApiError(errorBody, code, id).apply {
-                                responseListener?.invoke(this)
-                            })
-                        )
+                        NetworkResponse.ApiError(errorBody, code, id)
                     } else {
-                        callback.onResponse(
-                            this@NetworkResponseCall,
-                            Response.success(NetworkResponse.UnknownError(null, id).apply {
-                                responseListener?.invoke(this)
-                            })
-                        )
+                        NetworkResponse.UnknownError(null, id)
                     }
+                }.let {
+                    callback.onResponse(
+                        this@NetworkResponseCall,
+                        Response.success(it.apply {
+                            responseListener?.invoke(this)
+                        })
+                    )
                 }
             }
 

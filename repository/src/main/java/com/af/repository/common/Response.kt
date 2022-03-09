@@ -11,8 +11,9 @@ const val NETWORK_UNKNOWN_ERROR = "-2"
 fun <T : Any> Response<T>.thenFailure(failure: (u: Error) -> Unit): Response<T> {
     when (this) {
         is NetworkResponse.Success -> {}
+        is NetworkResponse.BizError -> {}
         is NetworkResponse.ApiError -> {
-            failure(Error(data.toString(), code.toString(), id))
+            failure(Error(body.toString(), httpCode.toString(), id))
         }
         is NetworkResponse.NetworkError -> {
             failure(Error(NETWORK_NET_ERROR, "network error", id))

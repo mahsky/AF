@@ -12,9 +12,10 @@ import org.junit.Test
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class RepositoryUnitTest {
+    private val repository = WanAndroidRepository()
+
     @Test
     fun `repository request`() = runBlocking {
-        val repository = WanAndroidRepository()
         val response = repository.banner()
         assertTrue(response is NetworkResponse.Success)
         joinAll()
@@ -22,9 +23,16 @@ class RepositoryUnitTest {
 
     @Test
     fun `repository crop response`() = runBlocking {
-        val repository = WanAndroidRepository()
         val response = repository.cropBanner()
         assertTrue(response is NetworkResponse.Success)
+        joinAll()
+    }
+
+    @Test
+    fun `repository error request`() = runBlocking {
+        val response = repository.errorBanner()
+        println("response : $response")
+        assertTrue(response is NetworkResponse.BizError)
         joinAll()
     }
 }
