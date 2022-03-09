@@ -7,9 +7,11 @@ import com.af.framework.net.NetworkRepository
  */
 class WanAndroidRepository : NetworkRepository<WanAndroidService>(
     WanAndroidService::class.java,
-    "https://wanandroid.com/"
+    baseUrl = "https://wanandroid.com/"
 ) {
     suspend fun wenda() = service.wenda()
 
     suspend fun banner() = service.banner()
+
+    suspend fun bannerTest() = service.bannerTest()
 }

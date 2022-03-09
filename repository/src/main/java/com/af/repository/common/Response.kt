@@ -1,9 +1,11 @@
 package com.af.repository.common
 
+import com.af.framework.net.CropNetworkResponse
 import com.af.framework.net.NetworkResponse
 import com.af.model.Error
 
 typealias Response<T> = NetworkResponse<T, Error>
+typealias CropResponse<T> = CropNetworkResponse<T, Error>
 
 const val NETWORK_NET_ERROR = "-1"
 const val NETWORK_UNKNOWN_ERROR = "-2"

@@ -3,19 +3,13 @@ package com.example.af.main.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.af.framework.net.NetworkMoshiAdapterFactory
-import com.af.model.WanAndroidBanner
 import com.af.repository.WanAndroidRepository
 import com.af.repository.common.thenFailure
 import com.af.repository.common.thenSuccess
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.lang.reflect.Type
 
 /**
  * 单向数据流 (UDF)
@@ -35,16 +29,24 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun load() {
         viewModelScope.launch {
-            WanAndroidRepository()
-                .wenda()
-                .thenFailure { error ->
-                    _uiState.update { it.copy(name = "${error.status} ${error.id}") }
-                }.thenSuccess { user ->
-                    _uiState.update { it.copy(name = "curPage + ${user.curPage.toString()}") }
-                }
+//            WanAndroidRepository()
+//                .wenda()
+//                .thenFailure { error ->
+//                    _uiState.update { it.copy(name = "${error.status} ${error.id}") }
+//                }.thenSuccess { user ->
+//                    _uiState.update { it.copy(name = "curPage + ${user.curPage.toString()}") }
+//                }
+//
+//            WanAndroidRepository()
+//                .banner()
+//                .thenFailure { error ->
+//                    _uiState.update { it.copy(name = "${error.status} ${error.id}") }
+//                }.thenSuccess { banners ->
+//                    _uiState.update { it.copy(name = banners.firstOrNull()?.title ?: "json parse error") }
+//                }
 
             WanAndroidRepository()
-                .banner()
+                .bannerTest()
                 .thenFailure { error ->
                     _uiState.update { it.copy(name = "${error.status} ${error.id}") }
                 }.thenSuccess { banners ->

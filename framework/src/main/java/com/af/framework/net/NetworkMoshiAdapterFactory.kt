@@ -1,6 +1,8 @@
 package com.af.framework.net
 
+import com.af.framework.net.Utils.getParameterUpperBound
 import com.squareup.moshi.*
+import retrofit2.CallAdapter
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
@@ -11,11 +13,15 @@ import java.lang.reflect.Type
 class NetworkMoshiAdapterFactory : JsonAdapter.Factory {
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? {
         val rawType = type.rawType
-        if (!CropEnvelope::class.java.isAssignableFrom(rawType)) return null
+        println("--------- $rawType ${Utils.getRawType(type)}")
+        if (Utils.getRawType(type) != CropNetworkResponse::class.java) return null
+
+        val responseType = getParameterUpperBound(0, type as ParameterizedType)
+
         val dataTypeAdapter = moshi.nextAdapter<Any>(
-            this, rawType, annotations
+            this, responseType, annotations
         )
-        return NetworkResponseTypeAdapter(rawType, dataTypeAdapter)
+        return NetworkResponseTypeAdapter(responseType, dataTypeAdapter)
     }
 }
 
@@ -33,7 +39,7 @@ class NetworkResponseTypeAdapter<T>(
             }
         }
         reader.endObject()
-        return data as T?
+        return NetworkResponse.Success(data!!) as T?
     }
 
     override fun toJson(writer: JsonWriter, value: T?) {

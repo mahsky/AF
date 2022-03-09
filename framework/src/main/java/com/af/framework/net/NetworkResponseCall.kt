@@ -24,10 +24,10 @@ internal class NetworkResponseCall<S : Any, E : Any>(
                 val error = response.errorBody()
 
                 if (response.isSuccessful) {
-                    if (body != null) {
+                    if (body != null && body is NetworkResponse.Success<*>) {
                         callback.onResponse(
                             this@NetworkResponseCall,
-                            Response.success(NetworkResponse.Success(body, id).apply {
+                            Response.success(NetworkResponse.Success(body.data as S, id).apply {
                                 responseListener?.invoke(this)
                             })
                         )

@@ -29,7 +29,10 @@ class NetworkResponseAdapterFactory(
         // get the response type inside the `Call` type
         val responseType = getParameterUpperBound(0, returnType)
         // if the response type is not ApiResponse then we can't handle this type, so we return null
-        if (getRawType(responseType) != NetworkResponse::class.java) {
+        val rawResponseType = getRawType(responseType)
+        if (rawResponseType != NetworkResponse::class.java &&
+            rawResponseType != CropNetworkResponse::class.java
+        ) {
             return null
         }
 
@@ -44,6 +47,6 @@ class NetworkResponseAdapterFactory(
 
         val id = (annotations.find { it is ID } as? ID)?.value ?: ""
 
-        return NetworkResponseAdapter<Any, Any>(successBodyType, errorBodyConverter, responseListener, id)
+        return NetworkResponseAdapter<Any, Any>(responseType, errorBodyConverter, responseListener, id)
     }
 }

@@ -23,3 +23,5 @@ sealed class NetworkResponse<out T : Any, out U : Any> {
      */
     data class UnknownError(val error: Throwable?, val id: String = "") : NetworkResponse<Nothing, Nothing>()
 }
+
+sealed class CropNetworkResponse<out T : Any, out U : Any> : NetworkResponse<T, U>()
