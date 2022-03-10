@@ -37,8 +37,8 @@ class NetworkCropResponseTypeAdapter<T>(
     override fun fromJson(reader: JsonReader): T? {
         reader.beginObject()
         var data: Any? = null
-        var errorCode: Int = 0
-        var errorMsg: String = ""
+        var errorCode = 0
+        var errorMsg = ""
         var dataException: Exception? = null
         while (reader.hasNext()) {
             when (reader.nextName()) {

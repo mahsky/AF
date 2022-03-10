@@ -12,8 +12,4 @@ class WanAndroidRepository : NetworkRepository<WanAndroidService>(
     suspend fun banner() = service.banner()
 
     suspend fun cropBanner() = service.cropBanner()
-
-    suspend fun errorBanner() = service.userInfo()
-
-    suspend fun errorCropBanner() = service.errorCropBanner()
 }

@@ -19,12 +19,4 @@ interface WanAndroidService {
     @GET("/banner/json")
     @ID(ReqId.ID_2)
     suspend fun cropBanner(): Response<List<WanAndroidCropBanner>>
-
-    @GET("/user/lg/userinfo/json")
-    @ID(ReqId.ID_1)
-    suspend fun userInfo(): Response<WanAndroidUserInfo>
-
-    @GET("/banner-error/json")
-    @ID(ReqId.ID_2)
-    suspend fun errorCropBanner(): Response<List<WanAndroidCropBanner>>
 }

@@ -6,7 +6,7 @@ import okhttp3.Request
  * Created by mah on 2022/3/2.
  */
 class NetworkParameterAdapterFactory {
-    fun get(networkParameterAdapter: NetworkParameterAdapter?): NetworkParameterAdapter {
+    fun create(networkParameterAdapter: NetworkParameterAdapter?): NetworkParameterAdapter {
         return object : NetworkParameterAdapter {
             override fun getGetParameter(request: Request): Map<String, String> =
                 networkParameterAdapter?.getGetParameter(request) ?: mutableMapOf()

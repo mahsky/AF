@@ -21,8 +21,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(viewBinding.root)
-
-        //TODO 熟悉 lifecycleScope & repeatOnLifecycle
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 /**
@@ -41,7 +39,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
 
         viewBinding.textView.setOnClickListener {
             viewModel.load()

@@ -13,10 +13,13 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        /**
+         * 统一网络回调、错误处理
+         */
         Network.responseListener.add {
             val error = when (it) {
                 is NetworkResponse.Success -> "Success"
-                is NetworkResponse.BizError -> it.msg
+                is NetworkResponse.BizError -> "BizError ${it.msg}"
                 is NetworkResponse.ApiError -> "ApiError"
                 is NetworkResponse.NetworkError -> "NetworkError  ${it.error.message}"
                 is NetworkResponse.UnknownError -> "UnknownError  ${it.error?.message}"
@@ -24,16 +27,15 @@ class App : Application() {
             println("response listener $error")
         }
 
+        /**
+         * 统一加参数
+         */
         Network.networkParameterAdapter = object : NetworkParameterAdapter {
-            override fun getGetParameter(request: Request): Map<String, String> =
-                mutableMapOf<String, String>().apply {
-//                    put("os", "android")
-                }
+            override fun getGetParameter(request: Request): Map<String, String> = mutableMapOf()
 
             override fun getPostQueryParameter(request: Request): Map<String, String> = mutableMapOf()
 
             override fun getPostFieldParameter(request: Request): Map<String, String> = mutableMapOf()
-
         }
     }
 

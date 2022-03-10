@@ -10,7 +10,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Created by mah on 2022/3/3.
  */
-
 @Documented
 @Target(METHOD)
 @Retention(RUNTIME)
