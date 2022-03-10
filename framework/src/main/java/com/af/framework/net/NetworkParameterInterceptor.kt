@@ -6,20 +6,20 @@ import okhttp3.*
 /**
  * Created by mah on 2022/3/2.
  */
-class NetworkParameterInterceptor(private val networkParameterConfig: NetworkParameterAdapter) : Interceptor {
+class NetworkParameterInterceptor(private val networkParameterAdapter: NetworkParameterAdapter) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
         val urlBuilder = request.url.newBuilder()
         when (request.method) {
             "GET" -> {
-                val parameter = networkParameterConfig.getGetParameter(request)
+                val parameter = networkParameterAdapter.getGetParameter(request)
                 parameter.forEach {
                     urlBuilder.addQueryParameter(it.key, it.value)
                 }
                 request.newBuilder().url(urlBuilder.build()).build()
             }
             "POST" -> {
-                val queryParameter = networkParameterConfig.getPostQueryParameter(request)
+                val queryParameter = networkParameterAdapter.getPostQueryParameter(request)
                 queryParameter.forEach {
                     urlBuilder.addQueryParameter(it.key, it.value)
                 }
@@ -30,7 +30,7 @@ class NetworkParameterInterceptor(private val networkParameterConfig: NetworkPar
                     for (i in 0 until body.size) {
                         builder.add(body.encodedName(i), body.encodedValue(i))
                     }
-                    val fieldParameter = networkParameterConfig.getPostFieldParameter(request)
+                    val fieldParameter = networkParameterAdapter.getPostFieldParameter(request)
                     fieldParameter.forEach {
                         builder.add(it.key, it.value)
                     }

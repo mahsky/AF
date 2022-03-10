@@ -67,8 +67,7 @@ class NetworkCropResponseTypeAdapter<T>(
         return if (data == null) null else NetworkResponse.Success(data) as? T
     }
 
-    override fun toJson(writer: JsonWriter, value: T?) {
-    }
+    override fun toJson(writer: JsonWriter, value: T?) = Unit
 }
 
 class NetworkResponseTypeAdapter<T>(
@@ -80,6 +79,5 @@ class NetworkResponseTypeAdapter<T>(
         return if (data == null) null else NetworkResponse.Success(data) as? T
     }
 
-    override fun toJson(writer: JsonWriter, value: T?) {
-    }
+    override fun toJson(writer: JsonWriter, value: T?) = Unit
 }
