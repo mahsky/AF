@@ -59,6 +59,7 @@ object Network {
         Retrofit.Builder()
             .baseUrl(baseUrl)
             .addCallAdapterFactory(networkResponseAdapterFactory)
+            .addConverterFactory(NetworkBaseTypeConverterFactory())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(okHttpClient)
             .build()
