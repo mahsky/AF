@@ -155,6 +155,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val houseDao = DB.db.houseDao()
                 houseDao.insertAll(house)
                 load(house).join()
+                delay(1000)
+                _uiState.update { it.copy(status = "") }
             }
         }
     }
