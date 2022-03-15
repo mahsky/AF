@@ -10,9 +10,14 @@ import okhttp3.Request
  * Created by mah on 2022/2/23.
  */
 class App : Application() {
+    companion object {
+        lateinit var app: Application
+    }
+
     override fun onCreate() {
         super.onCreate()
 
+        app = this
         /**
          * 统一网络回调、错误处理
          */

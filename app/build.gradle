@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -39,6 +40,11 @@ dependencies {
     implementation rootProject.dep['android-core-ktx']
     implementation rootProject.dep['appcompat']
     implementation rootProject.dep['material']
+    implementation rootProject.dep['jsoup']
+    implementation rootProject.dep['room']
+    implementation rootProject.dep['room-ktx']
+    implementation rootProject.dep['glide']
+    kapt rootProject.dep['room-compile']
 
     testImplementation rootProject.dep['junit']
     androidTestImplementation rootProject.dep['androidx-junit']

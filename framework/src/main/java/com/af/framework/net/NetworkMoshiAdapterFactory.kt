@@ -15,6 +15,7 @@ class NetworkMoshiAdapterFactory : JsonAdapter.Factory {
         val responseType = getParameterUpperBound(0, type as ParameterizedType)
         val rawResponseType = Utils.getRawType(responseType)
         var checkAnnotationType = responseType
+        if (rawResponseType == String::class.java) return null
         if (rawResponseType == List::class.java || rawResponseType == Collection::class.java) {
             checkAnnotationType = getParameterUpperBound(0, responseType as ParameterizedType)
         }
