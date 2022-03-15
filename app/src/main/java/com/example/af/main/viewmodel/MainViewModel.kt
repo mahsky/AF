@@ -76,7 +76,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
             house.price.toInt() == priceValue.toInt() -> {
                 val lastPrice = getLastPrice(house)
-                if (lastPrice != null && (System.currentTimeMillis() - lastPrice.time) < 1000 * 60 * 60 * 24) {
+                if (lastPrice != null && (System.currentTimeMillis() - lastPrice.time) < 1000 * 60 * 60 * 24 * 7) {
                     house.priceStatus
                 } else {
                     HOUSE_PRICE_STAUS_NONE
