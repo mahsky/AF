@@ -9,7 +9,7 @@ import androidx.room.*
 
 @Dao
 interface HouseDao {
-    @Query("SELECT * FROM House")
+    @Query("SELECT * FROM House ORDER BY other1, price")
     fun getAll(): LiveData<List<House>>
 
     @Query("SELECT * FROM House WHERE id IN (:ids)")
