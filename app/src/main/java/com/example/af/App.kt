@@ -1,10 +1,16 @@
 package com.example.af
 
 import android.app.Application
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.af.framework.net.Network
 import com.af.framework.net.NetworkParameterAdapter
 import com.af.framework.net.NetworkResponse
+import com.example.af.work.SyncHousePriceWorker
 import okhttp3.Request
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by mah on 2022/2/23.
@@ -42,6 +48,21 @@ class App : Application() {
 
             override fun getPostFieldParameter(request: Request): Map<String, String> = mutableMapOf()
         }
+
+
+        val syncHouseInfo =
+            PeriodicWorkRequestBuilder<SyncHousePriceWorker>(12, TimeUnit.HOURS)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiresCharging(true)
+                        .build()
+                )
+                .build()
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "sync_house_info",
+            ExistingPeriodicWorkPolicy.KEEP,
+            syncHouseInfo
+        )
     }
 
 }

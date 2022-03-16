@@ -12,6 +12,9 @@ interface HouseDao {
     @Query("SELECT * FROM House ORDER BY other1, price")
     fun getAll(): LiveData<List<House>>
 
+    @Query("SELECT * FROM House")
+    fun getAllSuspend(): List<House>
+
     @Query("SELECT * FROM House WHERE id IN (:ids)")
     fun loadAllByIds(ids: IntArray): LiveData<House>
 
