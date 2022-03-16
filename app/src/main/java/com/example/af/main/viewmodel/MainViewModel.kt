@@ -168,7 +168,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     _uiState.update { it.copy(status = "update id: ${house.id}") }
                     load(house).join()
                     _uiState.update { it.copy(status = "update finish id: ${house.id}") }
-                    delay(1000)
+                    delay((1000..3000).random().toLong())
                     _uiState.update { it.copy(status = "") }
                 }
             }
