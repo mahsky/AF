@@ -50,14 +50,19 @@ class App : Application() {
         }
 
 
+//        val constraints = Constraints.Builder()
+//            .setRequiredNetworkType(NetworkType.UNMETERED)
+//            .setRequiresCharging(true)
+//            .build()
+
         val syncHouseInfo =
-            PeriodicWorkRequestBuilder<SyncHousePriceWorker>(12, TimeUnit.HOURS)
-                .setConstraints(
-                    Constraints.Builder()
-                        .setRequiresCharging(true)
-                        .build()
-                )
+            PeriodicWorkRequestBuilder<SyncHousePriceWorker>(20, TimeUnit.MINUTES)
                 .build()
+
+//        val syncHouseInfo = PeriodicWorkRequestBuilder<SyncHousePriceWorker>(
+//            30, TimeUnit.MINUTES,
+//            15, TimeUnit.MINUTES
+//        ).build()
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "sync_house_info",
             ExistingPeriodicWorkPolicy.KEEP,

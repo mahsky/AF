@@ -39,7 +39,7 @@ object Network {
             .apply {
                 if (BuildConfig.DEBUG) {
                     addInterceptor(HttpLoggingInterceptor().apply {
-                        setLevel(HttpLoggingInterceptor.Level.BODY)
+                        setLevel(HttpLoggingInterceptor.Level.BASIC)
                     })
                 }
             }

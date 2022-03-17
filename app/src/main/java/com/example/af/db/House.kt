@@ -23,7 +23,7 @@ data class House(
     @ColumnInfo(name = "other1") val other1: String? = "",//小区
     @ColumnInfo(name = "other2") val other2: String? = "",//备注
     @ColumnInfo(name = "other3") val other3: String? = "",//上架状态
-    @ColumnInfo(name = "other4") val other4: String? = System.currentTimeMillis().toString(),//更新时间
+    @ColumnInfo(name = "other4") val other4: String? = "0",//更新时间
     @ColumnInfo(name = "other5") val other5: String? = "",
     @ColumnInfo(name = "status") val status: String = ""
 )

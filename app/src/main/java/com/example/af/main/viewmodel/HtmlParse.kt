@@ -32,7 +32,7 @@ object HtmlParse {
             }
             house.price.toInt() == priceValue.toInt() -> {
                 val lastPrice = getLastPrice(house)
-                if (lastPrice != null && (System.currentTimeMillis() - lastPrice.time) < 1000 * 60 * 60 * 24 * 7) {
+                if (lastPrice != null && (System.currentTimeMillis() - lastPrice.time) < 1000 * 60 * 60 * 24 * 14) {
                     house.priceStatus
                 } else {
                     HOUSE_PRICE_STAUS_NONE
@@ -58,7 +58,7 @@ object HtmlParse {
             priceStatus = priceStatus,
             other1 = xiaoqu.text(),
             other3 = if ("已下架" == xiajia.text()) HOUSE_LIST_XIAJIA else HOUSE_LIST_ONLINE,
-            other4 = System.currentTimeMillis().toString()
+            other4 = ((house.other4?.toIntOrNull() ?: 0) + 1).toString()
         )
         println("------------house: $saveHouse")
         val houseDao = DB.db.houseDao()
