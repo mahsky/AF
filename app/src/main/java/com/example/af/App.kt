@@ -1,10 +1,7 @@
 package com.example.af
 
 import android.app.Application
-import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.af.framework.net.Network
 import com.af.framework.net.NetworkParameterAdapter
 import com.af.framework.net.NetworkResponse
@@ -15,7 +12,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by mah on 2022/2/23.
  */
-class App : Application() {
+class App : Application(), Configuration.Provider {
     companion object {
         lateinit var app: Application
     }
@@ -49,20 +46,10 @@ class App : Application() {
             override fun getPostFieldParameter(request: Request): Map<String, String> = mutableMapOf()
         }
 
-
-//        val constraints = Constraints.Builder()
-//            .setRequiredNetworkType(NetworkType.UNMETERED)
-//            .setRequiresCharging(true)
-//            .build()
-
         val syncHouseInfo =
-            PeriodicWorkRequestBuilder<SyncHousePriceWorker>(20, TimeUnit.MINUTES)
+            PeriodicWorkRequestBuilder<SyncHousePriceWorker>(6, TimeUnit.HOURS)
                 .build()
 
-//        val syncHouseInfo = PeriodicWorkRequestBuilder<SyncHousePriceWorker>(
-//            30, TimeUnit.MINUTES,
-//            15, TimeUnit.MINUTES
-//        ).build()
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "sync_house_info",
             ExistingPeriodicWorkPolicy.KEEP,
@@ -70,4 +57,8 @@ class App : Application() {
         )
     }
 
+    override fun getWorkManagerConfiguration() =
+        Configuration.Builder()
+            .setMinimumLoggingLevel(android.util.Log.DEBUG)
+            .build()
 }

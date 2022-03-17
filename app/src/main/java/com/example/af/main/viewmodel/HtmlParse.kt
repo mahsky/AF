@@ -58,6 +58,7 @@ object HtmlParse {
             priceStatus = priceStatus,
             other1 = xiaoqu.text(),
             other3 = if ("已下架" == xiajia.text()) HOUSE_LIST_XIAJIA else HOUSE_LIST_ONLINE,
+//            other4 = "0"
             other4 = ((house.other4?.toIntOrNull() ?: 0) + 1).toString()
         )
         println("------------house: $saveHouse")

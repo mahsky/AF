@@ -45,6 +45,8 @@ dependencies {
     implementation rootProject.dep['room-ktx']
     implementation rootProject.dep['glide']
     implementation rootProject.dep['work']
+    implementation rootProject.dep['work-gcm']
+    implementation rootProject.dep['work-multiprocess']
     kapt rootProject.dep['room-compile']
 
     testImplementation rootProject.dep['junit']

@@ -1,11 +1,19 @@
 package com.example.af.main.ui
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
+import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -26,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private val houseAdapter: HouseAdapter = HouseAdapter(mutableListOf(), this::delete, this::remark)
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMainBinding.inflate(LayoutInflater.from(this))
@@ -45,6 +54,10 @@ class MainActivity : AppCompatActivity() {
         viewModel.houses.observe(this) {
             houseAdapter.setHouse(it)
         }
+
+//        if (isIgnoringBatteryOptimizations()) {
+//            requestIgnoreBatteryOptimizations()
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -108,5 +121,24 @@ class MainActivity : AppCompatActivity() {
             dialog.dismiss()
         }
         builder.show()
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    fun requestIgnoreBatteryOptimizations() {
+        try {
+            val intent = Intent(ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+            intent.data = Uri.parse("package:$packageName")
+            startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private fun isIgnoringBatteryOptimizations(): Boolean {
+        var isIgnoring = false
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        isIgnoring = powerManager.isIgnoringBatteryOptimizations(packageName)
+        return isIgnoring
     }
 }

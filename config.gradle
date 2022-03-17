@@ -55,5 +55,7 @@ ext {
 
             "glide"                      : 'com.github.bumptech.glide:glide:4.11.0',
             "work"                       : "androidx.work:work-runtime-ktx:${work_version}",
+            "work-gcm"                   : "androidx.work:work-gcm:${work_version}",
+            "work-multiprocess"          : "androidx.work:work-multiprocess:${work_version}",
     ]
 }
