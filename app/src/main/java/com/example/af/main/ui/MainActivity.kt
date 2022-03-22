@@ -8,12 +8,13 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.af.framework.ui.BaseActivity
 import com.example.af.databinding.ActivityMainBinding
 import com.example.af.main.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private lateinit var viewBinding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
 

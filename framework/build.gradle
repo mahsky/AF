@@ -43,6 +43,8 @@ dependencies {
     api rootProject.dep['okhttp3-logging-interceptor']
     api rootProject.dep['moshi']
     api rootProject.dep['converter-moshi']
+    api rootProject.dep['immersionbar']
+    api rootProject.dep['immersionbar-ktx']
 
     testImplementation rootProject.dep['junit']
     androidTestImplementation rootProject.dep['androidx-junit']
