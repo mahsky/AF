@@ -69,7 +69,7 @@ class HouseRender(
 
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     fun render(house: House, position: Int) {
-        viewBinding.title.text = (position + 1).toString() + " " + house.title + " " + house.id
+        viewBinding.title.text = (position + 1).toString() + " " + house.other4 + " " + house.title + " " + house.id
         viewBinding.text.text = "挂牌时间 ${house.guaPaiTime}  ${house.size} ${house.other1}"
         viewBinding.price.text = getPrice(house.priceJson)
 //        viewBinding.price.movementMethod = ScrollingMovementMethod.getInstance()
@@ -96,7 +96,8 @@ class HouseRender(
 
         viewBinding.root.setOnClickListener {
 //            val uri: Uri = Uri.parse("https://bj.lianjia.com/ershoufang/${house.id}.html")
-            val uri: Uri = Uri.parse("lianjia://ershou/detail?houseCode=${house.id}&ssid=276b3373-f048-4b9b-9c35-216a1f63f34b&uuid=e949a171-b682-469f-83ee-a70ab27bb449&refer=&current_url=https://m.lianjia.com/bj/ershoufang/${house.id}.html")
+            val uri: Uri =
+                Uri.parse("lianjia://ershou/detail?houseCode=${house.id}&ssid=276b3373-f048-4b9b-9c35-216a1f63f34b&uuid=e949a171-b682-469f-83ee-a70ab27bb449&refer=&current_url=https://m.lianjia.com/bj/ershoufang/${house.id}.html")
             val intent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(viewBinding.root.context, intent, null)
         }

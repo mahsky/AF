@@ -91,6 +91,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+
+    fun clear() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                houses.value?.forEach { house ->
+                    DB.db.houseDao().update(house.copy(other4 = "0"))
+                }
+            }
+        }
+    }
+
     fun delete(house: House) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

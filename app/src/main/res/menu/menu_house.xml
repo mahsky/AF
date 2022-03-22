@@ -14,4 +14,10 @@
         android:title="刷新"
         app:showAsAction="never"
         tools:ignore="HardcodedText" />
+    <item
+        android:id="@+id/clear"
+        android:orderInCategory="100"
+        android:title="清零"
+        app:showAsAction="never"
+        tools:ignore="HardcodedText" />
 </menu>

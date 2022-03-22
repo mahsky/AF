@@ -77,6 +77,10 @@ class MainActivity : AppCompatActivity() {
                 viewModel.refresh()
                 true
             }
+            R.id.clear -> {
+                viewModel.clear()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
