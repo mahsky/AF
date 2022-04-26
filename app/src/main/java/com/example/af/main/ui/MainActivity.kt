@@ -58,6 +58,10 @@ class MainActivity : AppCompatActivity() {
 //        if (isIgnoringBatteryOptimizations()) {
 //            requestIgnoreBatteryOptimizations()
 //        }
+
+//        this.window.decorView.postDelayed({
+//            viewModel.refreshById("101113576166")
+//        }, 3000)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

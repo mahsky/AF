@@ -91,6 +91,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun refreshById(id: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val houses = houses.value?.filter { it.id == id }
+                houses?.forEach { house ->
+                    _uiState.update { it.copy(status = "update id: ${house.id}") }
+                    load(house).join()
+                    _uiState.update { it.copy(status = "update finish id: ${house.id}") }
+                    delay((1000..3000).random().toLong())
+                    _uiState.update { it.copy(status = "") }
+                }
+            }
+        }
+    }
+
 
     fun clear() {
         viewModelScope.launch {

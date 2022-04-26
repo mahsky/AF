@@ -109,4 +109,14 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="HardcodedText"
         tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/imagesWrapper"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#eeeeee"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img" />
 </androidx.constraintlayout.widget.ConstraintLayout>

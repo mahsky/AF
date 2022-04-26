@@ -18,6 +18,7 @@ object HtmlParse {
         val document = Jsoup.parse(html)
         val title = document.selectXpath("/html/body/div[3]/div/div/div[1]/h1")
         val price = document.selectXpath("/html/body/div[5]/div[2]/div[3]/div/span[1]")
+        val imgs = document.selectXpath("/html/body/div[5]/div[1]/div[2]/ul")
         val img = document.selectXpath("/html/body/div[5]/div[1]/div[2]/ul/li[1]/img")
         val guaPaiTime = document.selectXpath("/html/body/div[7]/div[1]/div[1]/div/div/div[2]/div[2]/ul/li[1]/span[2]")
         val size = document.selectXpath("/html/body/div[5]/div[2]/div[4]/div[1]/div[1]")
@@ -25,6 +26,14 @@ object HtmlParse {
         val xiajia = document.selectXpath("/html/body/div[3]/div/div/div[1]/h1/span")
 
         val priceValue = price.text().trim()
+
+        val images = getImages(house)
+        if (images.isEmpty()) {
+            imgs.select("li").forEach {
+                val url = it.attr("data-pic")
+                if (url.isNotEmpty()) images.add(url)
+            }
+        }
 
         val priceStatus = when {
             house.price.isNullOrEmpty() -> {
@@ -52,19 +61,41 @@ object HtmlParse {
             title = title.text(),
             price = priceValue,
             priceJson = genPriceJson(house, priceValue),
-            img = img.attr("src"),
+            img = getImagesString(images),//img.attr("src"),
             guaPaiTime = guaPaiTime.text(),
             size = size.text(),
             priceStatus = priceStatus,
             other1 = xiaoqu.text(),
             other3 = if ("已下架" == xiajia.text()) HOUSE_LIST_XIAJIA else HOUSE_LIST_ONLINE,
 //            other4 = "0"
-            other4 = ((house.other4?.toIntOrNull() ?: 0) + 1).toString()
+            other4 = ((house.other4?.toIntOrNull() ?: 0) + 1).toString(),
+            other5 = html
         )
         println("------------house: $saveHouse")
         val houseDao = DB.db.houseDao()
         houseDao.update(saveHouse)
     }
+
+    fun getImages(house: House): MutableList<String> {
+        val moshi = Network.moshi
+        val adapter: JsonAdapter<List<String>> = moshi.adapter(Types.newParameterizedType(List::class.java, String::class.java))
+        return try {
+            adapter.fromJson(house.img)?.toMutableList() ?: mutableListOf()
+        } catch (e: Exception) {
+            mutableListOf()
+        }
+    }
+
+    fun getImagesString(images: List<String>): String {
+        val moshi = Network.moshi
+        val adapter: JsonAdapter<List<String>> = moshi.adapter(Types.newParameterizedType(List::class.java, String::class.java))
+        return try {
+            adapter.toJson(images) ?: ""
+        } catch (e: Exception) {
+            ""
+        }
+    }
+
 
     private fun getLastPrice(house: House): Price? {
         val moshi = Network.moshi
