@@ -94,6 +94,10 @@ class HouseRender(
             }
         }
 
+        viewBinding.imagesWrapper.setOnClickListener {
+            viewBinding.imagesWrapper.removeAllViews()
+        }
+
         when (house.priceStatus) {
             HOUSE_PRICE_STAUS_NONE -> {
                 viewBinding.priceStatus.text = ""
