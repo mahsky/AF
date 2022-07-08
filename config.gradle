@@ -15,7 +15,7 @@ ext {
             buildToolsVersion: "30.0.3",
             minSdkVersion    : 21,
             targetSdkVersion : 31,
-            applicationId    : "com.example.af",
+            applicationId    : "com.mah.qs",
             versionCode      : 1,
             versionName      : "1.0",
     ]
