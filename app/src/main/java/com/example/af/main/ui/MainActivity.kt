@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
+import kotlin.system.exitProcess
 
 class MainActivity : BaseActivity() {
     private lateinit var viewBinding: ActivityMainBinding
@@ -40,6 +41,9 @@ class MainActivity : BaseActivity() {
                 println("=: ${it.appName} ${it.letterAppName}")
             }
             appAdapter.setApps(apps.subList(0, 8))
+            if (viewBinding.editText.text.toString().isNotEmpty()) {
+                findApp(viewBinding.editText.text.toString())
+            }
         }
 
         viewBinding.editText.doOnTextChanged { text, start, before, count ->
