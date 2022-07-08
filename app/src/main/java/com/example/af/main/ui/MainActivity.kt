@@ -39,7 +39,7 @@ class MainActivity : BaseActivity() {
             apps.forEach {
                 println("=: ${it.appName} ${it.letterAppName}")
             }
-            appAdapter.setApps(apps)
+            appAdapter.setApps(apps.subList(0, 8))
         }
 
         viewBinding.editText.doOnTextChanged { text, start, before, count ->
@@ -52,11 +52,15 @@ class MainActivity : BaseActivity() {
     private fun findApp(text: CharSequence?) {
         text ?: return
         val tempApps = mutableListOf<App>()
+        if (text.isEmpty()) {
+            appAdapter.setApps(tempApps)
+            return
+        }
         apps.forEach { app ->
             app.sort = 0
             var isContains = true
             text.toString().uppercase(Locale.ENGLISH).toCharArray().forEach { char ->
-                if (isContains && !app.letterAppName.contains(char)) {
+                if (!app.letterAppName.contains(char)) {
                     isContains = false
                 }
                 if (isContains) {
@@ -76,7 +80,9 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initView() {
-        appAdapter = AppAdapter(mutableListOf())
+        appAdapter = AppAdapter(mutableListOf()) {
+            finish()
+        }
         viewBinding.recyclerView.layoutManager = GridLayoutManager(this, 4)
         viewBinding.recyclerView.adapter = appAdapter
     }
@@ -97,6 +103,7 @@ class MainActivity : BaseActivity() {
 
 class AppAdapter(
     private val orders: MutableList<App>,
+    private val launchApp: () -> Unit
 ) : RecyclerView.Adapter<AppRender>() {
 
     fun setApps(orders: List<App>) {
@@ -107,7 +114,7 @@ class AppAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppRender {
         val viewBinding = ItemAppBinding.inflate(LayoutInflater.from(parent.context))
-        return AppRender(viewBinding)
+        return AppRender(viewBinding, launchApp)
     }
 
     override fun getItemCount(): Int = orders.size
@@ -119,6 +126,7 @@ class AppAdapter(
 
 class AppRender(
     private val viewBinding: ItemAppBinding,
+    private val launchApp: () -> Unit
 ) : RecyclerView.ViewHolder(viewBinding.root) {
     fun render(app: App, position: Int) {
         viewBinding.name.text = app.appName
@@ -128,6 +136,7 @@ class AppRender(
             viewBinding.root.context.startActivity(
                 viewBinding.root.context.packageManager.getLaunchIntentForPackage(app.packageInfo.packageName)
             )
+            launchApp.invoke()
         }
     }
 }
