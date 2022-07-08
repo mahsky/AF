@@ -1,7 +1,6 @@
 package com.example.af.main.ui
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
@@ -11,6 +10,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.af.framework.ui.BaseActivity
 import com.example.af.databinding.ActivityMainBinding
 import com.example.af.main.viewmodel.MainViewModel
+import com.github.promeg.pinyinhelper.Pinyin
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -44,6 +44,14 @@ class MainActivity : BaseActivity() {
         viewBinding.textView.setOnClickListener {
             viewModel.load()
         }
+
+        hanziToPinyin()
+    }
+
+    private fun hanziToPinyin() {
+//        Pinyin.init(Pinyin.newConfig().with(CnCityDict.getInstance())
+        val s = Pinyin.toPinyin("Pin Yin 汉子拼音", "")
+        println("Pinyin: $s")
     }
 
     @SuppressLint("SetTextI18n")

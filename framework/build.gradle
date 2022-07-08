@@ -45,6 +45,9 @@ dependencies {
     api rootProject.dep['converter-moshi']
     api rootProject.dep['immersionbar']
     api rootProject.dep['immersionbar-ktx']
+    api rootProject.dep['tinypinyin']
+    api rootProject.dep['tinypinyin-android']
+    api rootProject.dep['tinypinyin-java']
 
     testImplementation rootProject.dep['junit']
     androidTestImplementation rootProject.dep['androidx-junit']
