@@ -46,9 +46,9 @@ ext {
             'immersionbar'               : "com.geyifeng.immersionbar:immersionbar:${immersionbar_version}",
             'immersionbar-ktx'           : "com.geyifeng.immersionbar:immersionbar-ktx:${immersionbar_version}",
 
-            'tinypinyin'                 : 'com.github.promeg:tinypinyin:2.0.3',
-            'tinypinyin-android'         : 'com.github.promeg:tinypinyin-lexicons-android-cncity:2.0.3',
-            'tinypinyin-java'            : 'com.github.promeg:tinypinyin-lexicons-java-cncity:2.0.3'
+            'tinypinyin'                 : 'com.github.promeg:tinypinyin:3.0.0',
+            'tinypinyin-android'         : 'com.github.promeg:tinypinyin-lexicons-android-cncity:3.0.0',
+            'tinypinyin-java'            : 'com.github.promeg:tinypinyin-lexicons-java-cncity:3.0.0'
 
     ]
 }
