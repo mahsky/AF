@@ -45,6 +45,9 @@ class MainActivity : BaseActivity() {
         viewBinding.clear.setOnClickListener {
             viewBinding.editText.setText("")
         }
+        viewBinding.exitBg.setOnClickListener {
+            finish()
+        }
     }
 
     private fun initObserver() {
