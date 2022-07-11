@@ -1,87 +1,31 @@
 package com.example.af.main.ui
 
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.af.framework.ui.BaseActivity
 import com.example.af.databinding.ActivityMainBinding
 import com.example.af.databinding.ItemAppBinding
+import com.example.af.main.viewmodel.App
 import com.example.af.main.viewmodel.MainViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import net.sourceforge.pinyin4j.PinyinHelper
-import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
-import net.sourceforge.pinyin4j.format.HanyuPinyinToneType.WITHOUT_TONE
-import java.util.*
 
 class MainActivity : BaseActivity() {
     private lateinit var viewBinding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
 
     private lateinit var appAdapter: AppAdapter
-    private val apps = mutableListOf<App>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(viewBinding.root)
         initView()
-
-        lifecycleScope.launch {
-            apps.clear()
-            apps.addAll(getApps(baseContext.packageManager))
-            apps.forEach {
-                println("=: ${it.appName} ${it.letterAppName}")
-            }
-            appAdapter.setApps(apps.subList(0, 8))
-            if (viewBinding.editText.text.toString().isNotEmpty()) {
-                findApp(viewBinding.editText.text.toString())
-            }
-        }
-
-        viewBinding.editText.doOnTextChanged { text, start, before, count ->
-            println("text: $text")
-            findApp(text)
-        }
-        viewBinding.editText.requestFocus()
-    }
-
-    private fun findApp(text: CharSequence?) {
-        text ?: return
-        val tempApps = mutableListOf<App>()
-        if (text.isEmpty()) {
-            appAdapter.setApps(tempApps)
-            return
-        }
-        apps.forEach { app ->
-            app.sort = 0
-            var isContains = true
-            text.toString().lowercase(Locale.ENGLISH).toCharArray().forEach { char ->
-                if (!app.letterAppName.contains(char)) {
-                    isContains = false
-                }
-                if (isContains) {
-                    val index = app.letterAppName.lowercase(Locale.ENGLISH).indexOf(char)
-                    if (index != -1) {
-                        app.sort = app.sort + index
-                    }
-                }
-            }
-            if (isContains) {
-                tempApps.add(app)
-            }
-
-            tempApps.sortBy { it.sort }
-        }
-        appAdapter.setApps(tempApps)
+        initObserver()
+        viewModel.load(baseContext.packageManager)
     }
 
     private fun initView() {
@@ -90,31 +34,24 @@ class MainActivity : BaseActivity() {
         }
         viewBinding.recyclerView.layoutManager = GridLayoutManager(this, 4)
         viewBinding.recyclerView.adapter = appAdapter
+
+        viewBinding.editText.doOnTextChanged { text, _, _, _ ->
+            println("text: $text")
+            viewModel.findApp(text.toString())
+        }
+        viewBinding.editText.requestFocus()
     }
 
-    private suspend fun getApps(packageManager: PackageManager): List<App> = withContext(Dispatchers.IO) {
-        val apps = packageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES)
-        mutableListOf<App>().apply {
-            apps.forEach {
-                if (packageManager.getLaunchIntentForPackage(it.packageName) != null) {
-                    val appName = it.applicationInfo.loadLabel(packageManager).toString()
-                    val appNameSb = StringBuilder()
-                    appName.toCharArray().forEach { char ->
-                        val pinyinArray = PinyinHelper.toHanyuPinyinStringArray(char, HanyuPinyinOutputFormat().apply {
-                            toneType = WITHOUT_TONE
-                        })
-
-                        if (pinyinArray == null || pinyinArray.isEmpty()) {
-                            appNameSb.append(char)
-                        } else {
-                            pinyinArray.forEach { c ->
-                                appNameSb.append(c)
-                            }
-                        }
-                    }
-                    add(App(it, appNameSb.toString(), appName))
-                }
+    private fun initObserver() {
+        viewModel.apps.observe(this) {
+            if (viewBinding.editText.text.toString().isNotEmpty()) {
+                viewModel.findApp(viewBinding.editText.text.toString())
+            } else {
+                appAdapter.setApps(it.subList(0, it.size.coerceAtMost(8)))
             }
+        }
+        viewModel.findApps.observe(this) {
+            appAdapter.setApps(it)
         }
     }
 }
@@ -158,5 +95,3 @@ class AppRender(
         }
     }
 }
-
-data class App(val packageInfo: PackageInfo, val letterAppName: String, val appName: String, var sort: Int = 0)
