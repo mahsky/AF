@@ -14,12 +14,13 @@ import com.af.framework.ui.BaseActivity
 import com.example.af.databinding.ActivityMainBinding
 import com.example.af.databinding.ItemAppBinding
 import com.example.af.main.viewmodel.MainViewModel
-import com.github.promeg.pinyinhelper.Pinyin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import net.sourceforge.pinyin4j.PinyinHelper
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType.WITHOUT_TONE
 import java.util.*
-import kotlin.system.exitProcess
 
 class MainActivity : BaseActivity() {
     private lateinit var viewBinding: ActivityMainBinding
@@ -63,12 +64,12 @@ class MainActivity : BaseActivity() {
         apps.forEach { app ->
             app.sort = 0
             var isContains = true
-            text.toString().uppercase(Locale.ENGLISH).toCharArray().forEach { char ->
+            text.toString().lowercase(Locale.ENGLISH).toCharArray().forEach { char ->
                 if (!app.letterAppName.contains(char)) {
                     isContains = false
                 }
                 if (isContains) {
-                    val index = app.letterAppName.uppercase(Locale.ENGLISH).indexOf(char)
+                    val index = app.letterAppName.lowercase(Locale.ENGLISH).indexOf(char)
                     if (index != -1) {
                         app.sort = app.sort + index
                     }
@@ -97,8 +98,21 @@ class MainActivity : BaseActivity() {
             apps.forEach {
                 if (packageManager.getLaunchIntentForPackage(it.packageName) != null) {
                     val appName = it.applicationInfo.loadLabel(packageManager).toString()
-                    val pinyin = Pinyin.toPinyin(appName, "")
-                    add(App(it, pinyin, appName))
+                    val appNameSb = StringBuilder()
+                    appName.toCharArray().forEach { char ->
+                        val pinyinArray = PinyinHelper.toHanyuPinyinStringArray(char, HanyuPinyinOutputFormat().apply {
+                            toneType = WITHOUT_TONE
+                        })
+
+                        if (pinyinArray == null || pinyinArray.isEmpty()) {
+                            appNameSb.append(char)
+                        } else {
+                            pinyinArray.forEach { c ->
+                                appNameSb.append(c)
+                            }
+                        }
+                    }
+                    add(App(it, appNameSb.toString(), appName))
                 }
             }
         }

@@ -45,10 +45,5 @@ ext {
             'androidx-espresso-core'     : 'androidx.test.espresso:espresso-core:3.4.0',
             'immersionbar'               : "com.geyifeng.immersionbar:immersionbar:${immersionbar_version}",
             'immersionbar-ktx'           : "com.geyifeng.immersionbar:immersionbar-ktx:${immersionbar_version}",
-
-            'tinypinyin'                 : 'com.github.promeg:tinypinyin:3.0.0',
-            'tinypinyin-android'         : 'com.github.promeg:tinypinyin-lexicons-android-cncity:3.0.0',
-            'tinypinyin-java'            : 'com.github.promeg:tinypinyin-lexicons-java-cncity:3.0.0'
-
     ]
 }
