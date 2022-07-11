@@ -9,6 +9,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.af.framework.ui.BaseActivity
+import com.af.framework.utils.AppUtils
 import com.example.af.databinding.ActivityMainBinding
 import com.example.af.databinding.ItemAppBinding
 import com.example.af.main.viewmodel.AppItem
@@ -93,11 +94,11 @@ class AppRender(
 ) : RecyclerView.ViewHolder(viewBinding.root) {
     fun render(appItem: AppItem, position: Int) {
         viewBinding.name.text = appItem.appName
-        viewBinding.imageView.setImageDrawable(appItem.packageInfo.applicationInfo.loadIcon(viewBinding.root.context.packageManager))
+        viewBinding.imageView.setImageDrawable(AppUtils.getAppIcon(appItem.packageName, viewBinding.root.context.packageManager))
 
         viewBinding.root.setOnClickListener {
             viewBinding.root.context.startActivity(
-                viewBinding.root.context.packageManager.getLaunchIntentForPackage(appItem.packageInfo.packageName)
+                viewBinding.root.context.packageManager.getLaunchIntentForPackage(appItem.packageName)
             )
             launchApp.invoke()
         }

@@ -64,7 +64,7 @@ object AppNameFindUseCase {
                             }
                         }
                     }
-                    add(AppItem(it, appNameSb.toString(), appName))
+                    add(AppItem(it.packageName, appNameSb.toString(), appName))
                 }
             }
         }
@@ -73,4 +73,4 @@ object AppNameFindUseCase {
 
 }
 
-data class AppItem(val packageInfo: PackageInfo, val letterAppName: String, val appName: String, var sort: Int = 0)
+data class AppItem(val packageName: String, val letterAppName: String, val appName: String, var sort: Int = 0)
