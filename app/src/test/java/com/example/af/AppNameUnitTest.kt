@@ -1,9 +1,11 @@
 package com.example.af
 
-import android.content.pm.PackageInfo
-import com.example.af.main.viewmodel.AppItem
+import com.af.model.AppItem
 import com.example.af.main.viewmodel.AppNameFindUseCase
 import kotlinx.coroutines.runBlocking
+import net.sourceforge.pinyin4j.PinyinHelper
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType
 import org.junit.Test
 
 /**
@@ -15,7 +17,7 @@ class AppNameUnitTest {
         val names = Data.names.split(",")
         val appItems = mutableListOf<AppItem>()
         names.forEach {
-            appItems.add(AppItem(PackageInfo(), it, it))
+            appItems.add(AppItem("", it, it))
         }
 
         runBlocking {
@@ -29,13 +31,24 @@ class AppNameUnitTest {
     @Test
     fun check_app_name_one() {
         val appItems = mutableListOf<AppItem>()
-        appItems.add(AppItem(PackageInfo(), "Google Play shangdian", "Google Play shangdian"))
+        appItems.add(AppItem("", "Google Play shangdian", "Google Play shangdian"))
 
         runBlocking {
             val findApps = AppNameFindUseCase.findApp("pdd", appItems)
             findApps.forEach {
                 println("====: ${it.appName}")
             }
+        }
+    }
+
+    @Test
+    fun t() {
+        val pinyinArray = PinyinHelper.toHanyuPinyinStringArray('相', HanyuPinyinOutputFormat().apply {
+            toneType = HanyuPinyinToneType.WITHOUT_TONE
+        })?.distinct()
+
+        pinyinArray?.forEach {
+            println("====: $it")
         }
     }
 }

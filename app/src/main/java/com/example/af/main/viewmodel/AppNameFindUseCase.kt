@@ -77,7 +77,7 @@ object AppNameFindUseCase {
                     appName.toCharArray().forEach { char ->
                         val pinyinArray = PinyinHelper.toHanyuPinyinStringArray(char, HanyuPinyinOutputFormat().apply {
                             toneType = HanyuPinyinToneType.WITHOUT_TONE
-                        })
+                        })?.distinct()
 
                         if (pinyinArray == null || pinyinArray.isEmpty()) {
                             appNameSb.append(char)

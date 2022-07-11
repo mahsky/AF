@@ -36,6 +36,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     _apps.value = AppNameFindUseCase.jsonToApps(apps)
                 }
             }
+        }
+        viewModelScope.launch {
             val apps = AppNameFindUseCase.getApps(packageManager)
             val json = AppNameFindUseCase.appsToJson(apps)
             if (json.isNotEmpty()) {
