@@ -14,35 +14,39 @@ import java.util.*
  * Created by mah on 2022/7/11.
  */
 object AppNameFindUseCase {
-    suspend fun findApp(text: CharSequence?, apps: List<App>): List<App> = withContext(Dispatchers.IO) {
-        val tempApps = mutableListOf<App>()
-        if (text == null || text.isEmpty()) return@withContext tempApps
-        apps.forEach { app ->
+    suspend fun findApp(text: CharSequence?, appItems: List<AppItem>): List<AppItem> = withContext(Dispatchers.IO) {
+        val tempAppItems = mutableListOf<AppItem>()
+        if (text == null || text.isEmpty()) return@withContext tempAppItems
+        val textLowercase = text.toString().lowercase(Locale.ENGLISH)
+
+        appItems.forEach { app ->
             app.sort = 0
+            var lastIndex = -1
             var isContains = true
-            text.toString().lowercase(Locale.ENGLISH).toCharArray().forEach { char ->
-                if (!app.letterAppName.contains(char)) {
+            val letterAppName = app.letterAppName.lowercase(Locale.ENGLISH)
+            println("check: letterAppName:$letterAppName")
+            textLowercase.toCharArray().forEach { char ->
+                val index = letterAppName.lowercase(Locale.ENGLISH).indexOf(char, 0.coerceAtLeast(lastIndex + 1))
+                if (index != -1) {
+                    lastIndex = index
+                    app.sort = app.sort + index
+                } else {
                     isContains = false
-                }
-                if (isContains) {
-                    val index = app.letterAppName.lowercase(Locale.ENGLISH).indexOf(char)
-                    if (index != -1) {
-                        app.sort = app.sort + index
-                    }
+                    return@forEach
                 }
             }
             if (isContains) {
-                tempApps.add(app)
+                tempAppItems.add(app)
             }
 
-            tempApps.sortBy { it.sort }
+            tempAppItems.sortBy { it.sort }
         }
-        tempApps
+        tempAppItems
     }
 
-    suspend fun getApps(packageManager: PackageManager): List<App> = withContext(Dispatchers.IO) {
+    suspend fun getApps(packageManager: PackageManager): List<AppItem> = withContext(Dispatchers.IO) {
         val apps = packageManager.getInstalledPackages(PackageManager.GET_ACTIVITIES)
-        mutableListOf<App>().apply {
+        mutableListOf<AppItem>().apply {
             apps.forEach {
                 if (packageManager.getLaunchIntentForPackage(it.packageName) != null) {
                     val appName = it.applicationInfo.loadLabel(packageManager).toString()
@@ -60,7 +64,7 @@ object AppNameFindUseCase {
                             }
                         }
                     }
-                    add(App(it, appNameSb.toString(), appName))
+                    add(AppItem(it, appNameSb.toString(), appName))
                 }
             }
         }
@@ -69,4 +73,4 @@ object AppNameFindUseCase {
 
 }
 
-data class App(val packageInfo: PackageInfo, val letterAppName: String, val appName: String, var sort: Int = 0)
+data class AppItem(val packageInfo: PackageInfo, val letterAppName: String, val appName: String, var sort: Int = 0)

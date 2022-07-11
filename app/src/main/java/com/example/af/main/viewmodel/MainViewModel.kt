@@ -12,11 +12,11 @@ import kotlinx.coroutines.launch
  * Created by mah on 2022/2/23.
  */
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private val _apps = MutableLiveData<List<App>>()
-    val apps: LiveData<List<App>> = _apps
+    private val _apps = MutableLiveData<List<AppItem>>()
+    val apps: LiveData<List<AppItem>> = _apps
 
-    private val _findApps = MutableLiveData<List<App>>()
-    val findApps: LiveData<List<App>> = _findApps
+    private val _findApps = MutableLiveData<List<AppItem>>()
+    val findApps: LiveData<List<AppItem>> = _findApps
 
     fun load(packageManager: PackageManager) {
         viewModelScope.launch {

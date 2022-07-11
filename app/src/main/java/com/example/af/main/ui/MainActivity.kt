@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.af.framework.ui.BaseActivity
 import com.example.af.databinding.ActivityMainBinding
 import com.example.af.databinding.ItemAppBinding
-import com.example.af.main.viewmodel.App
+import com.example.af.main.viewmodel.AppItem
 import com.example.af.main.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity() {
@@ -51,17 +51,17 @@ class MainActivity : BaseActivity() {
             }
         }
         viewModel.findApps.observe(this) {
-            appAdapter.setApps(it)
+            appAdapter.setApps(it.subList(0, it.size.coerceAtMost(8)))
         }
     }
 }
 
 class AppAdapter(
-    private val orders: MutableList<App>,
+    private val orders: MutableList<AppItem>,
     private val launchApp: () -> Unit
 ) : RecyclerView.Adapter<AppRender>() {
 
-    fun setApps(orders: List<App>) {
+    fun setApps(orders: List<AppItem>) {
         this.orders.clear()
         this.orders.addAll(orders)
         notifyDataSetChanged()
@@ -83,13 +83,13 @@ class AppRender(
     private val viewBinding: ItemAppBinding,
     private val launchApp: () -> Unit
 ) : RecyclerView.ViewHolder(viewBinding.root) {
-    fun render(app: App, position: Int) {
-        viewBinding.name.text = app.appName
-        viewBinding.imageView.setImageDrawable(app.packageInfo.applicationInfo.loadIcon(viewBinding.root.context.packageManager))
+    fun render(appItem: AppItem, position: Int) {
+        viewBinding.name.text = appItem.appName
+        viewBinding.imageView.setImageDrawable(appItem.packageInfo.applicationInfo.loadIcon(viewBinding.root.context.packageManager))
 
         viewBinding.root.setOnClickListener {
             viewBinding.root.context.startActivity(
-                viewBinding.root.context.packageManager.getLaunchIntentForPackage(app.packageInfo.packageName)
+                viewBinding.root.context.packageManager.getLaunchIntentForPackage(appItem.packageInfo.packageName)
             )
             launchApp.invoke()
         }
