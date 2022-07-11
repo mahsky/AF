@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.af.framework.ui.BaseActivity
 import com.af.framework.utils.AppUtils
+import com.af.model.AppItem
 import com.example.af.databinding.ActivityMainBinding
 import com.example.af.databinding.ItemAppBinding
-import com.example.af.main.viewmodel.AppItem
 import com.example.af.main.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity() {
@@ -55,8 +55,8 @@ class MainActivity : BaseActivity() {
         viewModel.apps.observe(this) {
             if (viewBinding.editText.text.toString().isNotEmpty()) {
                 viewModel.findApp(viewBinding.editText.text.toString())
-            } else {
-                appAdapter.setApps(it.subList(0, it.size.coerceAtMost(4)))
+//            } else {
+//                appAdapter.setApps(it.subList(0, it.size.coerceAtMost(4)))
             }
         }
         viewModel.findApps.observe(this) {

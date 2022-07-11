@@ -1,7 +1,11 @@
 package com.example.af.main.viewmodel
 
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import com.af.model.AppItem
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonDataException
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.sourceforge.pinyin4j.PinyinHelper
@@ -14,6 +18,25 @@ import java.util.*
  * Created by mah on 2022/7/11.
  */
 object AppNameFindUseCase {
+
+    suspend fun appsToJson(appItems: List<AppItem>): String = withContext(Dispatchers.IO) {
+        getAppJsonAdapter().toJson(appItems)
+    }
+
+    suspend fun jsonToApps(appItems: String): List<AppItem> = withContext(Dispatchers.IO) {
+        try {
+            getAppJsonAdapter().fromJson(appItems)
+        } catch (e: Exception) {
+            mutableListOf()
+        } ?: mutableListOf()
+    }
+
+    private fun getAppJsonAdapter(): JsonAdapter<List<AppItem>> {
+        val moshi = Moshi.Builder().build()
+        val parameterizedType = Types.newParameterizedType(List::class.java, AppItem::class.java)
+        return moshi.adapter(parameterizedType)
+    }
+
     suspend fun findApp(text: CharSequence?, appItems: List<AppItem>): List<AppItem> = withContext(Dispatchers.IO) {
         val tempAppItems = mutableListOf<AppItem>()
         if (text == null || text.isEmpty()) return@withContext tempAppItems
@@ -73,4 +96,3 @@ object AppNameFindUseCase {
 
 }
 
-data class AppItem(val packageName: String, val letterAppName: String, val appName: String, var sort: Int = 0)

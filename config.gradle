@@ -45,5 +45,7 @@ ext {
             'androidx-espresso-core'     : 'androidx.test.espresso:espresso-core:3.4.0',
             'immersionbar'               : "com.geyifeng.immersionbar:immersionbar:${immersionbar_version}",
             'immersionbar-ktx'           : "com.geyifeng.immersionbar:immersionbar-ktx:${immersionbar_version}",
+
+            'datastore'                  : "androidx.datastore:datastore-preferences:1.0.0",
     ]
 }
