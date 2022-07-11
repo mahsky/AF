@@ -19,7 +19,7 @@ class AppNameUnitTest {
         }
 
         runBlocking {
-            val findApps = AppNameFindUseCase.findApp("pdd", appItems)
+            val findApps = AppNameFindUseCase.findApp("dd", appItems)
             findApps.forEach {
                 println("====: ${it.appName}")
             }

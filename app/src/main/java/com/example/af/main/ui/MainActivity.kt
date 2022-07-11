@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,8 +39,12 @@ class MainActivity : BaseActivity() {
         viewBinding.editText.doOnTextChanged { text, _, _, _ ->
             println("text: $text")
             viewModel.findApp(text.toString())
+            viewBinding.clear.isVisible = text?.isNotEmpty() ?: false
         }
         viewBinding.editText.requestFocus()
+        viewBinding.clear.setOnClickListener {
+            viewBinding.editText.setText("")
+        }
     }
 
     private fun initObserver() {
@@ -47,11 +52,11 @@ class MainActivity : BaseActivity() {
             if (viewBinding.editText.text.toString().isNotEmpty()) {
                 viewModel.findApp(viewBinding.editText.text.toString())
             } else {
-                appAdapter.setApps(it.subList(0, it.size.coerceAtMost(8)))
+                appAdapter.setApps(it.subList(0, it.size.coerceAtMost(4)))
             }
         }
         viewModel.findApps.observe(this) {
-            appAdapter.setApps(it.subList(0, it.size.coerceAtMost(8)))
+            appAdapter.setApps(it.subList(0, it.size.coerceAtMost(4)))
         }
     }
 }

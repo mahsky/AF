@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="#AA000000"
+    android:fitsSystemWindows="true"
     tools:context="com.example.af.main.ui.MainActivity">
 
     <EditText
@@ -15,9 +15,22 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
-        android:background="#33000000"
-        android:inputType="textEmailAddress|textNoSuggestions"
+        android:background="@drawable/bg_app_name_edittext"
+        android:inputType="textVisiblePassword"
+        android:paddingStart="16dp"
+        android:paddingEnd="40dp"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/clear"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@null"
+        android:src="@drawable/ic_baseline_clear_24"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/editText"
+        app:layout_constraintEnd_toEndOf="@+id/editText"
+        app:layout_constraintTop_toTopOf="@+id/editText" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
