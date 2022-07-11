@@ -9,6 +9,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.af.framework.ui.BaseActivity
+import com.af.framework.ui.lightUi
 import com.af.framework.utils.AppUtils
 import com.af.model.AppItem
 import com.example.af.databinding.ActivityMainBinding
@@ -23,6 +24,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lightUi()
         viewBinding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(viewBinding.root)
         initView()
