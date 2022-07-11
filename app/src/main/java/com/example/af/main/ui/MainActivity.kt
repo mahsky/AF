@@ -31,7 +31,7 @@ class MainActivity : BaseActivity() {
 
     private fun initView() {
         appAdapter = AppAdapter(mutableListOf()) {
-            finish()
+            finishAndRemoveTask()
         }
         viewBinding.recyclerView.layoutManager = GridLayoutManager(this, 4)
         viewBinding.recyclerView.adapter = appAdapter
@@ -46,7 +46,7 @@ class MainActivity : BaseActivity() {
             viewBinding.editText.setText("")
         }
         viewBinding.exitBg.setOnClickListener {
-            finish()
+            finishAndRemoveTask()
         }
     }
 
