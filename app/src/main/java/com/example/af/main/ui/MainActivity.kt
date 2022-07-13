@@ -3,6 +3,7 @@ package com.example.af.main.ui
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -50,6 +51,19 @@ class MainActivity : BaseActivity() {
         }
         viewBinding.exitBg.setOnClickListener {
             finishAndRemoveTask()
+        }
+    }
+
+    override fun finishAndRemoveTask() {
+        hideSoftInputFromWindow()
+        super.finishAndRemoveTask()
+    }
+
+    private fun hideSoftInputFromWindow() {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        val decorView = window.peekDecorView()
+        if (decorView != null) {
+            imm.hideSoftInputFromWindow(decorView.windowToken, 0)
         }
     }
 
