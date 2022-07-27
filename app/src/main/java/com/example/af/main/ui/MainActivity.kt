@@ -5,10 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
+import androidx.core.view.postDelayed
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.af.framework.ui.BaseActivity
+import com.example.af.R
 import com.example.af.databinding.ActivityMainBinding
 import com.example.af.main.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.*
@@ -17,6 +21,7 @@ import kotlinx.coroutines.launch
 class MainActivity : BaseActivity() {
     private lateinit var viewBinding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
+    val mainFragment  = MainFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +48,21 @@ class MainActivity : BaseActivity() {
 
         viewBinding.textView.setOnClickListener {
             viewModel.load()
+        }
+
+        testLifecycleLayout()
+
+    }
+
+    private fun testLifecycleLayout() {
+        viewBinding.textView.postDelayed({
+            supportFragmentManager.commit {
+                remove(mainFragment)
+            }
+        }, 3000)
+
+        supportFragmentManager.commit {
+            add(R.id.fragment_container_view, mainFragment)
         }
     }
 
